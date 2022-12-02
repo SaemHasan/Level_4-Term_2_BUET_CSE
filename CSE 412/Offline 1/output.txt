@@ -1,0 +1,4 @@
+Average delay in queue: 0.44365398366139885 minutes
+Average number in queue: 0.46489177673262505
+Server utilization: 0.5255968033251646
+Time simulation ended: 954.3166944778186 minutes
