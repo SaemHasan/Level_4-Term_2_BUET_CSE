@@ -1,2 +1,2 @@
-g++ 1705027.cpp lcgrand.c -o main
+g++ $1 lcgrand.c -o main
 ./main

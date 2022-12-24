@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include "lcgrand.h"
 
 #define NUMBER_OF_EVENTS 4
@@ -34,6 +36,7 @@ void report();
 
 int main()
 {
+    srand(time(0));
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     cin >> initial_inventory_level >> number_of_months >> number_of_policies >> number_of_values_demand;
@@ -224,10 +227,10 @@ int generate_demand(){
 
 double expon(double mean)
 {
-    return -mean * log(lcgrand(1));
+    return -mean * log(lcgrand(rand()%100));
 }
 
 double uniform(double a, double b)
 {
-    return a + (b - a) * lcgrand(1);
+    return a + (b - a) * lcgrand(rand()%100);
 }
