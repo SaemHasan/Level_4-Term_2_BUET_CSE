@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 from scipy.stats import multivariate_normal
 from sklearn.decomposition import PCA
@@ -92,7 +91,8 @@ class GMM:
         for k in range(self.k):
             mul_normal = multivariate_normal.pdf(data, self.means[k], self.covariances[k], allow_singular=True)
             likelihood += self.weights[k] * mul_normal
-        return likelihood
+        # print(likelihood.shape)
+        return np.log(likelihood)
     
     def fit(self, max_iter=100, verbose=False):
         for i in range(max_iter+1):
@@ -111,7 +111,7 @@ class GMM:
             self.maximization_step()
             
             if self.m == 2:
-                self.display_contour(self.data)
+                self.display_contour(self.data, self.means, i)
             # elif self.m>2:
                 # self.apply_pca()
             
@@ -121,49 +121,39 @@ class GMM:
         plt.ioff()
         plt.show()
     
-    def display_contour(self, data):
+    def display_contour(self, data, mean, iter):
         plt.clf()
-        plt.scatter(self.data[:, 0], self.data[:, 1], .8)
-        
+        plt.scatter(data[:, 0], data[:, 1], .8)
+        plt.scatter(mean[:, 0], mean[:, 1], 1000, marker="+")
+
         x_max = np.max(data[:, 0])
         x_min = np.min(data[:, 0])
         y_max = np.max(data[:, 1])
         y_min = np.min(data[:, 1])
-        x = np.linspace(x_min-2, x_max+2, 100)
-        y = np.linspace(y_min-2, y_max+2, 100)
+        x = np.linspace(x_min-5, x_max+5, 100)
+        y = np.linspace(y_min-5, y_max+5, 100)
         X, Y = np.meshgrid(x, y)
         XX = np.array([X.ravel(), Y.ravel()]).T
         Z = -self.get_likelihood_each_sample(XX)
         Z = Z.reshape(X.shape)
         
-        CS = plt.contour(X, Y, Z)
+        X= np.array(X)
+        Y= np.array(Y)
+        Z= np.array(Z)
+        # print(X.shape)
+        # print(Y.shape)
+        # print(Z.shape)
+        # print(np.unique(Z))
+
+        CS = plt.contour(X, Y, Z, norm=LogNorm(vmin=1.0, vmax=1000.0), levels=np.logspace(0, 3, 10))
+        # CS = plt.contour(X, Y, Z)
         CB = plt.colorbar(CS, shrink=0.8, extend='both')
 
-        plt.title('Negative log-likelihood predicted by a GMM')
+        plt.title('Iteration : ' + str(iter))
         plt.axis('tight')
         plt.draw()
         plt.pause(0.1)
     
-    # Apply PCA to means, cov and data points
-    def apply_pca(self):
-        
-        # concatenate covariance matrices along diagonal
-        for k in range(self.k):
-            cov_matrices = self.covariances[k]
-            combined_covariance_matrix = np.block(
-                [[cov_matrices[i]] for i in range(len(cov_matrices))]
-            )
-            # apply PCA to combined covariance matrix
-            pca = PCA(n_components=2)
-            res = pca.fit_transform(combined_covariance_matrix)
-            # transform means and covariances
-            # res = pca.components_
-            # res = pca.fit_transform(res)
-            # res = pca.components_
-            print(cov_matrices.shape)
-            print("COV: \n", cov_matrices)
-            print(res.shape)
-            print("Res: \n",res)
 
 
     
@@ -179,7 +169,7 @@ class GMM_Runner:
             gmm = GMM(self.data, k, mean_selection=mean_selection)
             # gmm.print_values()
             self.likelihoods[i] = gmm.fit(max_iter=max_iter, verbose=verbose)
-        plot_2D_data(self.k_range, self.likelihoods, "k vs Log-Likelihood Plot", "k", "Log-Likelihood")
+        plot_2D_data(self.k_range, self.likelihoods, "Log-Likelihood Plot vs k", "k", "Log-Likelihood")
         
     def run_gmm_for_k(self, k_star, mean_selection="data_points", max_iter=100, verbose=False):
         gmm = GMM(self.data, k_star, mean_selection=mean_selection)
@@ -187,6 +177,17 @@ class GMM_Runner:
         # gmm.display_contour(self.data)
         print("Final values:")
         print("Means: \n", gmm.means)
+    
+    def run_gmm_greater_than_2D(self, k_star, mean_selection="data_points", max_iter=100, verbose=False):
+        gmm = GMM(self.data, k_star, mean_selection=mean_selection)
+        gmm.fit(max_iter=max_iter, verbose=verbose)
+
+        print("Final values:")
+        print("Means: \n", gmm.means)
+
+        data_2D = run_pca(self.data)
+        gmm_2d = GMM(data_2D, k_star, mean_selection=mean_selection)
+        gmm_2d.fit_show(max_iter=max_iter, verbose=False)
 
 
 
@@ -194,4 +195,4 @@ if __name__ == "__main__":
     data = load_data(DATASET)
     print(data.shape)
     gmm_runner = GMM_Runner(data, K_RANGE)
-    gmm_runner.run_gmm(mean_selection="data_points", max_iter=500, verbose=True)
+    gmm_runner.run_gmm(mean_selection="data_points", max_iter=300, verbose=True)
