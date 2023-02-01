@@ -1,0 +1,12 @@
+# for convolution layer --> CONV CHANNELS KERNEL_SIZE STRIDE PADDING. e.g. CONV 5 3 1 0
+# for maxpool layer --> MAXPOOL KERNEL_SIZE STRIDE. e.g. MAXPOOL 2 2
+# for fully connected layer --> FC OUTPUT_DIMENSION. e.g. FC 10
+# for ReLU --> ReLU. e.g. ReLU
+# for flatten --> FLATTEN. e.g. FLATTEN
+# for softmax --> SOFTMAX. e.g. SOFTMAX
+CONV 5 3 1 0
+MAXPOOL 2 2
+ReLU
+FLATTEN
+FC 10
+SOFTMAX
