@@ -1,0 +1,22 @@
+
+This task is related to the optimal stopping problem, or more specifically, the optimal stopping marriage problem. For a light-hearted introduction to the marriage problem, you may go through the link:
+https://www.npr.org/sections/krulwich/2014/05/15/312537965/how-to-marry-the-right-girl-a-mathematical-solution
+
+
+The rules are as follows,
+
+(1) There is a population of potential candidates (size n) from which one has to be selected.
+
+(2) You may meet or interview by picking one candidate from the population. In this way, you can meet the entire population one at a time.
+
+(3) After each interview, you have to decide if this candidate is the one to be selected. If 'yes', the process terminates (sucess or failure can be determined at this point). If 'no', the process continues until the entire population is exhausted (remember that if the population is exhausted, then the last candidate is the one who will be selected, according to rule 1).
+
+(4) Once a candidate is rejected after the interview, you can not go back for a review and the rejection is final.
+
+A strategy may be followed where a sample group of size m is to be interviewed at first only for the purpose of setting a standard which is the best from this sample group. Nobody can be selected from this sample group while interviewing them one after the other. After the standard is set, anyone who is better than the standard will be selected.
+
+For this task, you have to take an input of population size n, sample size m, and the sucess criteria s. Here, s can be 1, 3, 5, or 10 which means the strategy is sucessful if the best or anyone from top 3 or top 5 or top 10 was selected.
+
+For a certain value of n, assume that each candidate has a unique rank from 1 to n and the sample size m can be from 0 to n-1. For a fixed value of n and s, the output is the probability of sucess of a sample size m. From the output, we can know the probability distribution of sucess  of a strategy (m), given the value of population size n and the sucess defined by s.
+
+You may do this simulation by excel (spreadsheet) or by writing a program. 
