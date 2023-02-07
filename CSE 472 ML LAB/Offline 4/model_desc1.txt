@@ -4,22 +4,9 @@
 # for ReLU --> ReLU. e.g. ReLU
 # for flatten --> FLATTEN. e.g. FLATTEN
 # for softmax --> SOFTMAX. e.g. SOFTMAX
-
-CONV 6 5 1 2
+CONV 10 5 2 0
 ReLU
 MAXPOOL 2 2
-
-CONV 16 5 1 0
-ReLU
-MAXPOOL 2 2
-
 FLATTEN
-
-FC 120
-ReLU
-
-FC 84
-ReLU
-
 FC 10
 SOFTMAX
